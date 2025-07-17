@@ -1,84 +1,49 @@
-# CLAUDE.md
-
-> **Codified Logic for Agentic, Unified, Deterministic Engineering**
-
 ---
 
-## 🧱 Spec System Overview
-
-This workspace uses exactly `n + 2` specs:
-
-* `main.spec.md`: defines the overall system goal
-* `engineering.spec.md`: defines agent-facing directives for tricky tasks
-* `src/<module>/module.spec.md`: one per module
-
-No other spec files are permitted. Adding/removing a module requires updating the main spec.
-
----
-
-## 📄 Required Format for All Specs
-
-All spec files must be written in **Markdown with YAML frontmatter** and follow this structure:
-
-### 🔹 YAML Frontmatter
-
-```yaml
-id: emoji-renderer
+id: emoji-game-main
 version: 0.1.0
-title: Emoji Canvas Renderer
+title: Main Spec – Emoji Game POC
 status: draft
-entry_points: [src/renderer/index.ts]
+entry\_points:
+
+* src/game/index.ts
+
 description: >
-  Defines drawing behavior for a performant, emoji-based render layer.
-```
+Defines the overall system goal for the emoji-based proof-of-concept game. All modules and components must adhere to this shared vision and spec-driven structure.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-### 🔸 Required Sections
-
-```md
 ## 🧠 Goal
-Describe what this module or system is meant to accomplish.
+
+Create a simple, satisfying, and testable emoji-based game using agentic, spec-first modular development. Establish a deterministic system where modules can be progressively added or modified without risk of regressions.
+
+## 🧩 Modules
+
+The following modules define the emoji game system:
+
+* `renderer/` – emoji/canvas drawing engine
+* `input/` – captures pointer/touch/keyboard events
+* `game-loop/` – manages ticks, updates, and animation frames
+* `physics/` – basic movement, gravity, collisions
+* `state/` – manages runtime game state and transitions
+* `emoji-data/` – defines emoji assets and metadata
+* `audio/` – (optional) sound feedback layer
+* `scoring/` – (optional) manages scoring or win conditions
 
 ## ✅ Success Criteria
-- List observable behaviors
-- Include user-facing outcomes or performance constraints
+
+* Core loop functional with at least one interactive emoji mechanic (e.g. slingshot, flip, orbit)
+* Renders at 60 FPS on modern browsers
+* System must validate with zero spec errors across all modules
+* Git commits trace to validated spec versions
+* Agent can iteratively enhance game modules with deterministic feedback loops
 
 ## 🧪 Test Strategy
-- Describe how the success criteria will be verified
+
+* Validate all specs according to the formatting rules defined in `CLAUDE.md`
+* Use lightweight manual testing + eventual automation to confirm game feel
+* Compare behavior between spec versions to catch regressions
+* Track performance targets (FPS, interaction latency)
 
 ## 🔁 Changelog
-- 0.1.0 — YYYY-MM-DD — author — Initial version
-```
 
-> Everything below this line is for agent-generated sections or extensions.
-
----
-
-## ♻️ Versioning Rules
-
-Specs must follow semantic versioning:
-
-* `MAJOR`: breaking change
-* `MINOR`: added behavior
-* `PATCH`: typo or clarification
-
-A spec cannot be deleted unless first marked as `status: deprecated`.
-
----
-
-## 📃 Git Commit Rules
-
-* Each commit must reference the spec `id@version`
-* Example: `feat(input@0.2.0): add mousewheel support`
-* No commits may alter code in `src/` without a corresponding spec change
-* Use one commit per spec change
-* Changelog entries must match the commit summary
-
----
-
-## 🎯 Design Goals
-
-* One spec per module
-* Spec-first development
-* Deterministic validation
-* Clean modular code ownership
-* Clear communication between humans and agents
+* 0.1.0 — 2025-07-17 — palme — Initial main spec for Emoji Game POC
