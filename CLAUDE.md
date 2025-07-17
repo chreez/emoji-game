@@ -4,135 +4,81 @@
 
 ---
 
-## 🧱 Workspace Structure
+## 🧱 Spec System Overview
 
-All code changes must originate from a validated specification.
-Specs follow this deterministic layout:
+This workspace uses exactly `n + 2` specs:
 
-```
-/main.spec.md              ← Primary goal and system-wide success criteria
-/engineering.spec.md       ← Directives to aid agent behavior and tooling
-/src/<module>/module.spec.md  ← One per module
-```
+* `main.spec.md`: defines the overall system goal
+* `engineering.spec.md`: defines agent-facing directives for tricky tasks
+* `src/<module>/module.spec.md`: one per module
 
-### 🔢 Rule: Total Specs = `n + 2`
-
-* `n` = number of modules
-* `+1` main spec
-* `+1` engineering spec
-
-No additional specs allowed without explicit justification and version bump in `main.spec.md`.
+No other spec files are permitted. Adding/removing a module requires updating the main spec.
 
 ---
 
-## 📄 Required Spec Format
+## 📄 Required Format for All Specs
 
-All specs must use **Markdown with YAML frontmatter**.
+All spec files must be written in **Markdown with YAML frontmatter** and follow this structure:
 
-### Frontmatter (required):
+### 🔹 YAML Frontmatter
 
 ```yaml
 id: emoji-renderer
-title: Emoji Canvas Renderer
 version: 0.1.0
+title: Emoji Canvas Renderer
 status: draft
 entry_points: [src/renderer/index.ts]
 description: >
   Defines drawing behavior for a performant, emoji-based render layer.
 ```
 
----
-
-## 🧠 Top-Level Human Area
-
-Each spec must place **human-focused content at the top**:
+### 🔸 Required Sections
 
 ```md
 ## 🧠 Goal
-Clear articulation of what this module/system is intended to achieve.
+Describe what this module or system is meant to accomplish.
 
 ## ✅ Success Criteria
-- Concrete input/output behaviors
-- Real-world performance or UX goals
-- Integration expectations
+- List observable behaviors
+- Include user-facing outcomes or performance constraints
 
 ## 🧪 Test Strategy
-Optional but encouraged. Unit, integration, or UX test hints.
+- Describe how the success criteria will be verified
 
-## ♻️ Changelog
-- 0.1.0 — YYYY-MM-DD — author — Initial spec
+## 🔁 Changelog
+- 0.1.0 — YYYY-MM-DD — author — Initial version
 ```
 
-> Everything below this line is treated as agent-optimized content.
+> Everything below this line is for agent-generated sections or extensions.
 
 ---
 
 ## ♻️ Versioning Rules
 
-* Follows Semantic Versioning: `MAJOR.MINOR.PATCH`
-* Spec changes must increment version correctly:
+Specs must follow semantic versioning:
 
-  * `PATCH`: typo, clarification
-  * `MINOR`: added behavior, backward-compatible
-  * `MAJOR`: breaking change
+* `MAJOR`: breaking change
+* `MINOR`: added behavior
+* `PATCH`: typo or clarification
 
-Specs may not be hard-deleted. Use `status: deprecated` first.
-
----
-
-## 🚰 Agent Directives (From `engineering.spec.md`)
-
-Directives define fallback logic when agents encounter hard-to-automate tasks (e.g., visual bugs).
-
-Examples:
-
-* Wait for user to click a button before continuing
-* Listen to a logstream until `pattern.match` resolves
-* Request human validation if test coverage is insufficient
-
-Agents must treat humans as tools: precise, minimal interactions, with deterministic expectations.
-
----
-
-## ✅ Validation Requirements
-
-Specs must pass validation with `bin/spec-validator`.
-
-### Minimum Checks:
-
-* Valid frontmatter
-* Required top-level sections
-* Chronological changelog
-* Correct version bump
-* No status downgrade (e.g., active → draft)
-* No spec addition/removal without `main.spec.md` update
-
-Output format: `PASS`, `WARN`, `FAIL`, with machine-readable recommendations.
+A spec cannot be deleted unless first marked as `status: deprecated`.
 
 ---
 
 ## 📃 Git Commit Rules
 
-All code and spec changes must follow atomic, traceable commit conventions:
-
-* Each commit must reference a spec `id:` and version tag.
-* Example commit message:
-
-  ```
-  feat(input-handler-spec@0.2.0): add mousewheel support
-  ```
-* No commits may touch `src/` without a corresponding spec change or reference.
-* Use one commit per validated spec change.
-* Use `fix:`, `feat:`, `chore:` style prefixes for clarity.
-* Commit messages should match the corresponding changelog entry.
-
-Git hooks and validation tools may reject commits that violate these rules.
+* Each commit must reference the spec `id@version`
+* Example: `feat(input@0.2.0): add mousewheel support`
+* No commits may alter code in `src/` without a corresponding spec change
+* Use one commit per spec change
+* Changelog entries must match the commit summary
 
 ---
 
 ## 🎯 Design Goals
 
-* **Single source of intent per module**
-* **Specs communicate purpose clearly to both human and machine**
-* **Validation and generation must be deterministic**
-* **No code is written outside the spec loop**
+* One spec per module
+* Spec-first development
+* Deterministic validation
+* Clean modular code ownership
+* Clear communication between humans and agents
